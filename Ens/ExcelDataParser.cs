@@ -24,7 +24,11 @@ namespace Ens.Pages
         {
             //We could technically check for correct extension here, by doing file.filename.extension,
             //however, we are only allowing CSV and XLSX files currently through the UI.
-            
+            if(file == null)
+            {
+                return null;
+            }
+
             //Create the results table to return to user with column names
             DataTable resultsTable = new DataTable();
             resultsTable.Columns.Add("Account ID");

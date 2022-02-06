@@ -1,5 +1,4 @@
-﻿using DevExpress.Xpo;
-using Ens.Pages;
+﻿using Ens.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,13 +27,18 @@ namespace Ens.Controllers
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult ProcessAndSaveReadings([FromForm]IFormFile file)
+        public IActionResult ProcessAndSaveReadings([FromForm] IFormFile file)
         {
-             DataTable processedCsvDataTable = ExcelDataParser.GetProcessedCsvTable(file);
-             string readingsImportResult = TableValidation.ValidateDataTableForReadings(processedCsvDataTable);
+            if (file == null)
+            {
+                return NotFound("Error - No File Supplied");
+            }
+
+            DataTable processedCsvDataTable = ExcelDataParser.GetProcessedCsvTable(file);
+            string readingsImportResult = TableValidation.ValidateDataTableForReadings(processedCsvDataTable);
 
             //If the message contains 'Error' message, display not found message
-            if (readingsImportResult.Contains("Error"))
+            if (readingsImportResult.ToUpper().Contains("ERROR"))
             {
                 return NotFound(readingsImportResult);
             }
